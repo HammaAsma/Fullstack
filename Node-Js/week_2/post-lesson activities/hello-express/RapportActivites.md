@@ -51,7 +51,7 @@ Discussion
 
         Quelle différence entre throw new Error() et next(err) ?
 
-            throw new Error(): envoyé une erreur qui doit être capturée dans crush (try/crush) sinon il va planter le serveur
+            throw new Error(): envoyé une erreur qui doit être capturée dans catch (try/catch) sinon il va planter le serveur
 
             next(err) : transmet l'erreur à un middleware d'erreur 
 
