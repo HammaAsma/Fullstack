@@ -52,7 +52,7 @@ export async function updateTodo(id,params) {
         }
     }
     if(params.dueDate!==undefined){
-        const regex=/^[0-9]{4}\-[0-9]{2]\-[0-9]{2}$/
+        const regex=/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/
         if(!regex.test(params.dueDate)){
             const err=new Error("format de date non valide")
             err.status=400
