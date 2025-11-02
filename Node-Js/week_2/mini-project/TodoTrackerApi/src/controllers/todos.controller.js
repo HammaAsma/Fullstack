@@ -3,7 +3,7 @@ import {listTodos,getTodosById,createTodo,updateTodo,removeTodo,inverserComplete
 export async function getTodos(req,res,next) {
     try{
         
-        let {page=1,limit=10,status="all",priority,q} = req.query
+        let {page=1,limit=10,status="all",priority,q,sort} = req.query
         page=parseInt(page)
         limit=parseInt(limit)
 
@@ -28,6 +28,11 @@ export async function getTodos(req,res,next) {
             const query=q.toLowerCase()
             todos=todos.filter(t=>t.title.toLowerCase().includes(query))
         }
+        if(sort){
+            const order=sort.toLowerCase();
+            if(order==='asc') todos.sort((a,b)=>new Date(a.createdAt) - new Date(b.createdAt));
+            else if(order==='desc') todos.sort((a,b)=>new Date(b.createdAt) - new Date(a.createdAt));
+        }
         const start=(page-1)*limit
         const end=start+limit
         res.json({
@@ -51,17 +56,23 @@ export async function getTodo(req,res) {
     return res.json(todo)
 }
 
-export async function create(req,res) {
-    const element=req.body.title
-    const todo=await createTodo(element)
-    res.status(201).json(todo)
+export async function create(req,res,next) {
+    try{
+        const element=req.body
+        const todo=await createTodo(element)
+        res.status(201).json(todo)
+    }
+    catch(e){
+        next(e)
+    }
+    
 }
 
-export async function update(req,res) {
+export async function update(req,res,next) {
     try{
         const id=Number(req.params.id)
         const {title,completed,priority,dueDate}=req.body
-        const todo=await getTodo(id)
+        const todo=await getTodosById(id)
         if(!todo) return res.status(404).json({error:"todo non trouvé"})
         const params={}
         if(title!==undefined) params.title=title
@@ -72,8 +83,7 @@ export async function update(req,res) {
         return res.status(200).json(updateTodo_)
     }
     catch(e){
-        if(e.status===400)return res.status(400).json({error: e.message})
-        return res.status(500).json({error: "errer"})
+        next(e)
     }
     
 }
@@ -84,12 +94,18 @@ export async function remove(req,res) {
     res.status(204).end()
 }
 
-export async function inverser(req,res) {
-    const id=Number(req.params.id)
-    const todo=await getTodosById(id)
-    if(!todo) return res.status(404).json({error:"todo not found!"})
-    const updCompleted=await inverserCompleted(id,!Boolean(todo.completed))
-    if(!updCompleted) return res.status(500).json({error:"completed non inversé"})
-    return res.status(200).json(updCompleted)
+export async function inverser(req,res,next) {
+    try{
+        const id=Number(req.params.id)
+        const todo=await getTodosById(id)
+        if(!todo) return res.status(404).json({error:"todo not found!"})
+        const updCompleted=await inverserCompleted(id,!Boolean(todo.completed))
+        if(!updCompleted) return res.status(500).json({error:"completed non inversé"})
+        return res.status(200).json(updCompleted)
+    }
+    catch(e){
+        next(e)
+    }
+    
     
 }
