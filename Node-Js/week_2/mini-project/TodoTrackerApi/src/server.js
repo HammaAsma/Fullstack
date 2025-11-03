@@ -1,5 +1,6 @@
 import express from "express";
 import router from "./routes/todos.routes.js";
+import logger from "./middlewares/logger.js";
 
 const app=express();
 const PORT=process.env.PORT || 3000;
@@ -7,7 +8,7 @@ const PORT=process.env.PORT || 3000;
 
 
 app.use(express.json())
-
+app.use(logger)
 app.use('/api/todos',router)
 
 app.listen(PORT,()=>{

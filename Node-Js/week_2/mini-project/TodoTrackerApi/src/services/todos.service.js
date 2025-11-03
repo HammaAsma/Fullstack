@@ -1,9 +1,30 @@
-import { error } from 'node:console';
+
+import path from 'path';
+import {fileURLToPath} from 'url';
 import {readFile, writeFile} from 'node:fs/promises';
-import { title } from 'node:process';
 
-const chemin='data/todos.json';
+const __filename=fileURLToPath(import.meta.url);
+const __dirname=path.dirname(__filename);
 
+const chemin=path.resolve(__dirname,'../data/todos.json');
+
+function validerParams(title,priority,dueDate){
+    if(!title || !title.trim()){
+        const err=new Error("title requis")
+        err.status=400
+        throw err
+    }
+    if(priority && !["low","medium","high"].includes(priority)){
+        const err=new Error("Priority doit être soit low,medium ou high")
+        err.status=400
+        throw err
+    }
+    if(dueDate &&!/^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/.test(dueDate)){
+        const err=new Error("format de date non valide")
+        err.status=400
+        throw err
+    }
+}
 /**
  * 
  * @return {Promise<todos[]>}
@@ -14,37 +35,69 @@ export async function listTodos() {
 }
 /**
  * 
- * @param {number} id 
- * @return {Promise<todo>}
+ * @param {{page?:number,limit?:number,status?:string,priority?:string,q?:string,sort?:string}} query 
+ * @return {Promise<{page:number,limit:number,total:number,totalPages:number,data:todos[]}>}
  */
-export async function getTodosById(id) {
-    const todos= await listTodos();
-    return todos.find(t=>t.id==Number(id))
+export async function FilterTodos(query) {
+    let {page=1,limit=10,status="all",priority,q,sort} = query
+        page=parseInt(page)
+        limit=parseInt(limit)
+
+        if(isNaN(page) || page < 1){
+            page=1;
+        }
+        if(isNaN(limit) || limit < 1){
+            limit=10;
+        }
+        let todos = await listTodos()
+        if(status=="active"){
+            todos=todos.filter(t=>!t.completed)
+        }
+        else if(status=="completed"){
+            todos=todos.filter(t=>t.completed)
+        }
+        const allpriopity=["low","medium","high"]
+        if(priority && allpriopity.includes(priority)){
+            todos=todos.filter(t=>t.priority===priority)
+        }
+        if(q){
+            const querystg=q.toLowerCase()
+            todos=todos.filter(t=>t.title.toLowerCase().includes(querystg))
+        }
+        if(sort){
+            const order=sort.toLowerCase();
+            if(order==='asc') todos.sort((a,b)=>new Date(a.createdAt) - new Date(b.createdAt));
+            else if(order==='desc') todos.sort((a,b)=>new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        const start=(page-1)*limit
+        const end=start+limit
+
+        return {
+            page,
+            limit,
+            total:todos.length,
+            totalPages:Math.ceil(todos.length/limit),
+            data:todos.slice(start,end)
+        }
 }
 /**
  * 
- * @param {{title:string,completed?:boolean,priority?:string,dueDate?:Date,createdAt:Date,updatedAt:date }} params
+ * @param {number} id 
+ * @return {Promise<todo|null>}
+ */
+export async function getTodosById(id) {
+    const todos= await listTodos();
+    return todos.find(t=>t.id==Number(id)) ?? null
+}
+/**
+ * 
+ * @param {{title:string,completed?:boolean,priority?:string,dueDate?:string}} params
  * @return {Promise<todo>}
  */
 export async function createTodo(params) { 
     const todos=await listTodos();
     const id=todos.length?todos[todos.length-1].id+1 : 1;
-    //title requis
-    if(!params.title || !params.title.trim()){
-        const err=new error("title requis")
-        err.status=400
-        throw err
-    }
-    if(params.priority && !["low","medium","high"].includes(params.priority)){
-        const err=new Error("Priority doit être soit low,medium ou high")
-        err.status=400
-        throw err
-    }
-    if(params.dueDate &&!/^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}/.test(params.dueDate)){
-        const err=new Error("format de date non valide")
-        err.status=400
-        throw err
-    }
+    validerParams(params.title,params.priority,params.dueDate)
     const now=new Date().toISOString()
     const todo={
         id,
@@ -61,31 +114,16 @@ export async function createTodo(params) {
 }
 /**
  * @param {number} id 
- * @param {{title?:string,completed?:boolean,priority?:string,dueDate?:Date}} params 
- * @return {Promise<todo>}
+ * @param {{title?:string,completed?:boolean,priority?:string,dueDate?:string}} params 
+ * @return {Promise<todo|null>}
  */
 export async function updateTodo(id,params) {
     const todos = await listTodos()
-    const index=todos.findIndex(t=>t.id==id)
+    const index=todos.findIndex(t=>t.id===Number(id))
     if(index=== -1){
         return null
     }
-    if(params.priority!==undefined){
-        const priority_=["low","medium","high"]
-        if(!priority_.includes(params.priority)){
-            const err=new Error("Priority doit être soit low,medium ou high")
-            err.status=400
-            throw err
-        }
-    }
-    if(params.dueDate!==undefined){
-        const regex=/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/
-        if(!regex.test(params.dueDate)){
-            const err=new Error("format de date non valide")
-            err.status=400
-            throw err
-        }
-    }
+    validerParams(params.title,params.priority,params.dueDate)
 
     todos[index]={ ...todos[index], ...params,updatedAt:new Date().toISOString()}
     await writeFile(chemin,JSON.stringify( todos,null,2))
@@ -103,13 +141,13 @@ export async function removeTodo(id) {
  * 
  * @param {number} id 
  * @param {boolean} completed
- * @return {Promise<todo>}
+ * @return {Promise<todo|null>}
  */
 export async function inverserCompleted(id,completed) {
     const todos = await listTodos()
     const index=todos.findIndex(t=>t.id==Number(id))
     if(index=== -1) return null
-    todos[index]={ ...todos[index], completed}
+    todos[index]={ ...todos[index], completed,updatedAt:new Date().toISOString()}
     await writeFile(chemin,JSON.stringify( todos,null,2))
     return todos[index]
 }
