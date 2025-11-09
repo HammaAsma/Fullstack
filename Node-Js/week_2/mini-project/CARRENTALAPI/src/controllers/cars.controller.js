@@ -98,9 +98,13 @@ export async function update(req,res) {
 
 export async function remove(req,res) {
     const id=Number(req.params.id);
-    const deleted = await removeCar(id);
-    if(!deleted){
-        return res.status(404).json({error:"car non trouvé"});
+    try{
+        const deleted = await removeCar(id);
+        if(!deleted){
+            return res.status(404).json({error:"car non trouvé"});
+        }
+        res.status(200).json({message:"voiture supprimée avec succès"});
+    }catch(e){
+        res.status(400).json({message:e.message});
     }
-    res.status(204).end();
 }

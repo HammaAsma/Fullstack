@@ -1,11 +1,13 @@
 import { readFile,writeFile } from 'node:fs/promises'
 import path from 'path';
 import {fileURLToPath} from 'url';
-
+import {readRentals,writeRentals} from './rentals.service.js';
 const __filename=fileURLToPath(import.meta.url);
 const __dirname=path.dirname(__filename);
 
 const chemin=path.resolve(__dirname,'../data/cars.json');
+//pour supp d'une car
+const chemin_rental=path.resolve(__dirname,'../data/rentals.json');
 
 //variable globale
 async function readCars() {
@@ -149,7 +151,19 @@ export async function removeCar(id) {
     if(index=== -1){
         return false;
     }
+    /*if(!cars[index].available){
+        throw new Error("Impossible de supprimer une voiture louée !");
+    }*/
+    let rentals=await readRentals();
+    const HasActiveRental=rentals.some(r=>r.carId === Number(id) && r.status === "active");
+    if(HasActiveRental){
+        throw new Error("Impossible de supprimer une voiture qui à encore une location active !");
+    }
     cars=cars.filter(c=>c.id !== Number(id));
     await  writeCars(cars);
+//supprimer toutes les lignes de location de cette viture
+    const filterRentals=rentals.filter(r=>r.carId !== Number(id));
+    await writeRentals(filterRentals);
+
     return true;
 }

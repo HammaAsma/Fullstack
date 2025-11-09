@@ -8,11 +8,11 @@ const __dirname=path.dirname(__filename);
 
 const chemin=path.resolve(__dirname,'../data/rentals.json');
 
-async function readRentals() {
+export async function readRentals() {
   const data = await readFile(chemin, 'utf8');
   return JSON.parse(data);
 }
-async function writeRentals(rentals) {
+export async function writeRentals(rentals) {
   await writeFile(chemin, JSON.stringify(rentals, null, 2), 'utf8');
 }
 function differenceInDays(dateTo, dateFrom) {
@@ -85,9 +85,9 @@ export async function createRental(rental) {
     if(!car){
         throw new Error ("car not found");
     }
-    if(car.available === false){
+    /*if(car.available === false){
         throw new Error ("car not available");
-    }
+    }*/
     let rentals = await readRentals();
     //calcule date To || days
     let days;
@@ -110,7 +110,8 @@ export async function createRental(rental) {
     }
 
    }
-   rental.id=rentals.length+1;
+   const maxId = rentals.length ? Math.max(...rentals.map(r => r.id)) : 0;
+   rental.id = maxId + 1;
    rental.dailyRate=car.pricePerDay;
    if(isNaN(rental.days) || rental.days <1){
         throw new Error("Le nomber de jours doit être strictement supérieur à zéro")
@@ -120,6 +121,25 @@ export async function createRental(rental) {
    rental.status="active";
    rental.createdAt=new Date().toISOString();
    rental.updatedAt=new Date().toISOString();
+
+   
+   for(const r of rentals){
+    if(
+        r.carId === rental.carId &&
+        r.status === "active" 
+    ){
+        const existingFrom = new Date(r.from);
+        const existingTo = new Date(r.to);
+        const newFrom = new Date(rental.from);
+        const newTo = new Date(rental.to);
+        if(!(newTo < existingFrom || newFrom > existingTo)){
+            throw new Error("cette voiture est déjà louée sur cette période !");  
+        }
+      
+    }
+    
+   }
+
    rentals.push(rental);
    await updateCar(car.id,{available : false});
    await writeRentals(rentals);
