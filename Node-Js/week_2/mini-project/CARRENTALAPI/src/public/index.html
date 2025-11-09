@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cars & Rentals API Demo Amélioré</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0; padding: 20px;
+    color: #2c3e50;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px;
+  }
+  .section {
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  fieldset {
+    border: 1px solid #3498db;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  legend {
+    padding: 0 10px;
+    font-weight: bold;
+    color: #2980b9;
+  }
+  label {
+    display: inline-block;
+    margin: 8px 5px 4px 0;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+  input, select, button {
+    margin: 5px 10px 15px 0;
+    padding: 6px 10px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  button {
+    cursor: pointer;
+    background: #3498db;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
+  }
+  button:hover:not(:disabled) {
+    background: #2980b9;
+  }
+  button:disabled {
+    background: #a8c5e9;
+    cursor: default;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 15px;
+    font-size: 0.9em;
+    display: none;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background: #3498db;
+    color: white;
+  }
+  #carResponse, #rentalResponse, #carActionMessage, #rentalActionMessage {
+    margin-bottom: 12px; 
+    font-size: 1em; 
+    padding: 10px; 
+    border-radius: 6px; 
+    display: none;
+    font-weight: normal;
+    background: #f2f9fc;
+    border: 1px solid #b3e6fd;
+    transition: opacity 0.6s;
+  }
+  .error {
+    background: #fde2e2 !important;
+    color: #c82333 !important;
+    border: 1px solid #c82333 !important;
+  }
+  .success {
+    background: #e5fce6 !important;
+    color: #218838 !important;
+    border: 1px solid #218838 !important;
+  }
+  .card-info ul {
+    list-style:none;
+    padding:0;
+    margin:8px 0 0 0;
+  }
+  .card-info strong {
+    font-weight:600;
+  }
+</style>
+</head>
+<body>
+<h1>Cars & Rentals API Demo Amélioré</h1>
+<div class="grid-container">
+  <!-- Cars Section -->
+  <div class="section">
+    <h2>Voitures</h2>
+    <fieldset>
+      <legend>Filtres voitures</legend>
+      <label for="filterCategory">Catégorie</label>
+      <input type="text" id="filterCategory" placeholder=" [eco,sedan,suv,van]" />
+      <label for="filterAvailable">Disponible ?</label>
+      <select id="filterAvailable">
+        <option value="">Tous</option>
+        <option value="true">Oui</option>
+        <option value="false">Non</option>
+      </select>
+      <input type="number" id="filterMinPrice" min="0" placeholder="Prix min"  />
+      <input type="number" id="filterMaxPrice" min="0" placeholder="Prix max" />
+      <input type="text" id="filterQ" placeholder="Modèle ou plaque" />
+      <label for="filterPage">Page</label>
+      <input type="number" id="filterPage" min="1" placeholder="1" />
+      <label for="filterLimit">Limite</label>
+      <input type="number" id="filterLimit" min="1" placeholder="10" />
+      <div>
+        <button id="btnListCars">Lister</button>
+        <button type="button" id="btnResetCarFilters">Réinitialiser filtres</button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Actions voiture par ID</legend>
+      <label for="carIdInput">ID Voiture</label>
+      <input type="number" id="carIdInput" min="1" placeholder="ID voiture" />
+      <button id="btnGetCar">Obtenir</button>
+      <button id="btnDeleteCar">Supprimer</button>
+    </fieldset>
+    <fieldset>
+      <legend>Ajouter une voiture</legend>
+      <form id="carCreateForm">
+        <input type="text" id="carBrandCreate" placeholder="Marque" required />
+        <input type="text" id="carPlateCreate" placeholder="Plaque" required />
+        <input type="text" id="carModelCreate" placeholder="Modèle" required />
+        <input type="text" id="carCategoryCreate" placeholder="Catégorie" required />
+        <input type="number" id="carPricePerDayCreate" min="0" placeholder="Prix/jour" required />
+        <button type="submit">Ajouter</button>
+      </form>
+    </fieldset>
+    <fieldset>
+      <legend>Mettre à jour une voiture</legend>
+      <form id="carUpdateForm">
+        <select id="carIdUpdate" required>
+          <option value="">Sélectionner un ID...</option>
+        </select>
+        <input type="text" id="carBrandUpdate" placeholder="Marque" />
+        <input type="text" id="carPlateUpdate" placeholder="Plaque" />
+        <input type="text" id="carModelUpdate" placeholder="Modèle" />
+        <input type="text" id="carCategoryUpdate" placeholder="Catégorie" />
+        <input type="number" id="carPricePerDayUpdate" min="0" placeholder="Prix/jour (€)" />
+        <label>
+          <input type="checkbox" id="carAvailableUpdate" />
+          Disponible
+        </label>
+        <button type="submit">Mettre à jour</button>
+      </form>
+    </fieldset>
+    <div id="carActionMessage"></div>
+    <div id="carResponse"></div>
+    <table id="carsTable" aria-label="Liste des voitures">
+      <thead>
+        <tr><th>ID</th><th>Marque</th><th>Plaque</th><th>Modèle</th><th>Catégorie</th><th>Prix/jour</th><th>Disponible</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="paginationContainer" style="margin-top: 10px;"></div>
+  </div>
+  <!-- Rentals Section -->
+  <div class="section">
+    <h2>Locations</h2>
+    <fieldset>
+      <legend>Filtres locations</legend>
+      <label for="filterRentalCarId">ID Voiture</label>
+      <input type="number" id="filterRentalCarId" min="1" placeholder="ID voiture" />
+      <input type="text" id="filterRentalStatus" placeholder="Statut" />
+      <label for="filterRentalFrom">De <input type="date" id="filterRentalFrom"></label>
+      <label for="filterRentalTo">À </label>
+      <input type="date" id="filterRentalTo" />
+      <label for="filterRentalPage">Page</label>
+      <input type="number" id="filterRentalPage" min="1" placeholder="1" />
+      <label for="filterRentalLimit">Limite</label>
+      <input type="number" id="filterRentalLimit" min="1" placeholder="10" />
+      <div>
+        <button id="btnListRentals">Lister</button>
+        <button type="button" id="btnResetRentalFilters">Réinitialiser filtres</button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Créer une location</legend>
+      <form id="rentalForm">
+        <label for="rentalCarId">ID Voiture</label>
+        <input type="number" id="rentalCarId" min="1" placeholder="ID voiture" required />
+        <label for="rentalFrom">Date début </label>
+        <input type="date" id="rentalFrom" required />
+        <fieldset>
+          <legend>Choisissez comment préciser la durée</legend>
+          <label><input type="radio" name="durationType" value="days" checked> Nombre de jours</label>
+          <label><input type="radio" name="durationType" value="dateTo"> Date fin</label>
+        </fieldset>
+        <div id="daysContainer">
+          <label for="rentalDays">Nombre de jours</label>
+          <input type="number" id="rentalDays" min="1" placeholder="Nombre de jours" required />
+        </div>
+        <div id="dateToContainer" style="display:none;">
+          <label for="rentalTo">Date fin</label>
+          <input type="date" id="rentalTo" />
+        </div>
+        <button type="submit">Créer</button>
+      </form>
+    </fieldset>
+    <fieldset>
+      <legend>Actions location par ID</legend>
+      <label for="rentalIdInput">ID Location</label>
+      <input type="number" id="rentalIdInput" min="1" placeholder="ID location" />
+      <button id="btnReturnRental">Retourner</button>
+      <button id="btnCancelRental">Annuler</button>
+    </fieldset>
+    <div id="rentalActionMessage"></div>
+    <div id="rentalResponse"></div>
+    <table id="rentalsTable" aria-label="Liste des locations">
+      <thead>
+        <tr><th>ID</th><th>ID Voiture</th><th>Début</th><th>Fin</th><th>Jours</th><th>Total (€)</th><th>Statut</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="paginationContainerRental" style="margin-top: 10px;"></div>
+  </div>
+</div>
+<script>
+const API_BASE = "http://localhost:3000/api"; 
+const API_TOKEN = "secret123";
+
+// Fonction d'affichage
+function displayResponse(container, message, isError = false) {
+  if (typeof container === "string") container = document.getElementById(container);
+  if (!container) return;
+  container.innerHTML = message || '';
+  container.style.display = message ? 'block' : 'none';
+  container.className = isError ? "error" : "success";
+}
+window.onload = () => {
+  clearTable('carsTable');
+  clearTable('rentalsTable');
+  displayResponse('carResponse', '');
+  displayResponse('rentalResponse', '');
+  displayResponse('carActionMessage', '');
+  displayResponse('rentalActionMessage', '');
+};
+function clearTable(tableId) {
+  const table = document.getElementById(tableId);
+  if (table) {
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = '';
+    table.style.display = 'none';
+  }
+}
+function renderPagination(containerId,totalPages, currentPage, onPageClick) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  if (totalPages <= 1) return;
+  const createButton = (text, page, disabled = false) => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.disabled = disabled;
+    btn.onclick = () => onPageClick(page);
+    return btn;
+  };
+  container.appendChild(createButton('«', currentPage - 1, currentPage === 1));
+  for (let p = 1; p <= totalPages; p++) {
+    container.appendChild(createButton(p, p, p === currentPage));
+  }
+  container.appendChild(createButton('»', currentPage + 1, currentPage === totalPages));
+}
+function clearPagination(containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+}
+function formatCarInfo(car) {
+  // Si la voiture n'existe pas, retourne un message d'erreur lisible (et pas de fiche)
+  if (!car || typeof car !== 'object' || car.id === undefined) {
+    return `<span class="error">🚫 Voiture non trouvée !</span>`;
+  }
+  return `
+    <div class="card-info">
+      <span style="font-size:1.3em;vertical-align:middle;">&#128663;</span>
+      <span style="font-size:1.1em;color:#218838;font-weight:bold">Voiture sélectionnée :</span>
+      <ul>
+        <li><strong>ID:</strong> ${car.id}</li>
+        <li><strong>Marque:</strong> ${car.brand}</li>
+        <li><strong>Plaque:</strong> ${car.plate}</li>
+        <li><strong>Modèle:</strong> ${car.model}</li>
+        <li><strong>Catégorie:</strong> ${car.category}</li>
+        <li><strong>Tarif/Jour:</strong> <span style="color:#007bff">${car.pricePerDay} €</span></li>
+        <li><strong>Disponible:</strong> ${car.available ? '<span style="color:green;">Oui</span>' : '<span style="color:red;">Non</span>'}</li>
+      </ul>
+    </div>
+  `;
+}
+
+document.getElementById('btnResetCarFilters').onclick = () => {
+  ['filterCategory','filterAvailable','filterMinPrice','filterMaxPrice','filterQ','filterPage','filterLimit'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  clearTable('carsTable');
+  displayResponse('carResponse', '');
+  displayResponse('carActionMessage', '');
+  clearPagination('paginationContainer');
+};
+document.getElementById("btnListCars").onclick = async () => {
+  await loadCarsPage(1);
+};
+async function loadCarsPage(page = 1) {
+  const queryObj = {
+    category: document.getElementById("filterCategory").value,
+    available: document.getElementById("filterAvailable").value,
+    minPrice: document.getElementById("filterMinPrice").value,
+    maxPrice: document.getElementById("filterMaxPrice").value,
+    q: document.getElementById("filterQ").value,
+    page: page,
+    limit: document.getElementById("filterLimit").value || 10
+  };
+  const filterRentalFrom = document.getElementById('filterRentalFrom');
+  const filterRentalTo = document.getElementById('filterRentalTo');
+
+  filterRentalFrom.addEventListener('change', function() {
+    filterRentalTo.min = filterRentalFrom.value;
+    if (filterRentalTo.value && filterRentalTo.value < filterRentalFrom.value) {
+      filterRentalTo.value = filterRentalFrom.value;
+    }
+  });
+
+  
+
+  if (filterPage.value) queryObj.page = filterPage.value;
+  if (filterLimit.value) queryObj.limit = filterLimit.value;
+  Object.keys(queryObj).forEach(k => {
+    if (!queryObj[k]) delete queryObj[k];
+  });
+  try {
+    const res = await fetch(`${API_BASE}/cars?${new URLSearchParams(queryObj)}`);
+    const data = await res.json();
+    if (Array.isArray(data.data)) {
+      const tbody = document.querySelector('#carsTable tbody');
+      tbody.innerHTML = '';
+      data.data.forEach(car => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${car.id}</td>
+          <td>${car.brand}</td>
+          <td>${car.plate}</td>
+          <td>${car.model}</td>
+          <td>${car.category}</td>
+          <td>${car.pricePerDay.toFixed(2)}</td>
+          <td>${car.available ? 'Oui' : 'Non'}</td>`;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('carsTable').style.display = 'table';
+      displayResponse('carResponse', `Page ${data.page} / ${data.totalPages} | Total: ${data.total}`);
+      renderPagination("paginationContainer",data.totalPages, data.page, loadCarsPage);
+    } else {
+      clearTable('carsTable');
+      displayResponse('carResponse', "Aucune donnée reçue", true);
+      clearPagination("paginationContainer");
+    }
+  } catch (err) {
+    clearTable('carsTable');
+    displayResponse('carResponse', `Erreur: ${err.message}`, true);
+    clearPagination("paginationContainer");
+  }
+}
+document.getElementById("btnGetCar").onclick = async () => {
+  const id = document.getElementById("carIdInput").value.trim();
+  if (!id) return alert("Veuillez entrer un ID voiture");
+  try {
+    const res = await fetch(`${API_BASE}/cars/${id}`);
+    const data = await res.json();
+    displayResponse('carActionMessage', formatCarInfo(data), false);
+  } catch (err) {
+    displayResponse('carActionMessage', `Erreur: ${err.message}`, true);
+  }
+};
+document.getElementById("btnDeleteCar").onclick = async () => {
+  const id = document.getElementById("carIdInput").value.trim();
+  if (!id) return alert("Veuillez entrer un ID voiture");
+  try {
+    const res = await fetch(`${API_BASE}/cars/${id}`, {
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${API_TOKEN}` }
+    });
+    if (res.ok) {
+      displayResponse('carActionMessage', `<span style="color:green;font-size:1.2em">&#10003;</span> Voiture supprimée avec succès`, false);
+      clearTable('carsTable');
+    } else {
+      const errData = await res.json();
+      displayResponse('carActionMessage', JSON.stringify(errData), true);
+    }
+  } catch (err) {
+    displayResponse('carActionMessage', `Erreur: ${err.message}`, true);
+  }
+};
+document.getElementById("carCreateForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const body = {
+    brand: document.getElementById("carBrandCreate").value.trim(),
+    plate: document.getElementById("carPlateCreate").value.trim(),
+    model: document.getElementById("carModelCreate").value.trim(),
+    category: document.getElementById("carCategoryCreate").value.trim(),
+    pricePerDay: Number(document.getElementById("carPricePerDayCreate").value),
+  };
+  try {
+    const res = await fetch(`${API_BASE}/cars`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_TOKEN}`
+      },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      displayResponse('carActionMessage', `<span style="color:green;font-size:1.2em">&#10003;</span> Voiture créée<br>${formatCarInfo(data)}`, false);
+      e.target.reset();
+      //await loadCarsPage(1);
+      await populateCarIdSelect();
+    } else {
+      displayResponse('carActionMessage', JSON.stringify(data), true);
+    }
+  } catch (err) {
+    displayResponse('carActionMessage', `Erreur: ${err.message}`, true);
+  }
+};
+async function populateCarIdSelect() {
+  const res = await fetch(`${API_BASE}/cars?limit=1000`);
+  const data = await res.json();
+  const select = document.getElementById('carIdUpdate');
+  select.innerHTML = '<option value="">Sélectionner un ID...</option>';
+  if (Array.isArray(data.data)) {
+    data.data.forEach(car => {
+      const opt = document.createElement('option');
+      opt.value = car.id;
+      opt.textContent = `${car.id} - ${car.brand} (${car.plate})`;
+      select.appendChild(opt);
+    });
+  }
+}
+document.getElementById('carIdUpdate').addEventListener('change', async function() {
+  const id = this.value;
+  if (!id) {
+    ['carBrandUpdate', 'carPlateUpdate', 'carModelUpdate', 'carCategoryUpdate', 'carPricePerDayUpdate'].forEach(fieldId => {
+      document.getElementById(fieldId).value = '';
+    });
+    document.getElementById('carAvailableUpdate').checked = false;
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/cars/${id}`);
+    const car = await res.json();
+    document.getElementById('carBrandUpdate').value = car.brand || '';
+    document.getElementById('carPlateUpdate').value = car.plate || '';
+    document.getElementById('carModelUpdate').value = car.model || '';
+    document.getElementById('carCategoryUpdate').value = car.category || '';
+    document.getElementById('carPricePerDayUpdate').value = car.pricePerDay || '';
+    document.getElementById('carAvailableUpdate').checked = !!car.available;
+    displayResponse('carActionMessage', formatCarInfo(car), false);
+  } catch (e) {
+    displayResponse('carActionMessage', "Erreur lors du chargement de la voiture !", true);
+  }
+});
+populateCarIdSelect();
+document.getElementById("carUpdateForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("carIdUpdate").value;
+  if (!id) return alert("Veuillez sélectionner l'ID de la voiture à modifier.");
+  const body = {};
+  ['carBrandUpdate', 'carPlateUpdate', 'carModelUpdate', 'carCategoryUpdate', 'carPricePerDayUpdate', 'carAvailableUpdate'].forEach(fieldId => {
+    const el = document.getElementById(fieldId);
+    if (el) {
+      if (el.type === 'checkbox') {
+        if (el.checked !== undefined) body['available'] = el.checked;
+      } else if (el.value.trim() !== '') {
+        if (fieldId === 'carPricePerDayUpdate') {
+          body['pricePerDay'] = Number(el.value);
+        } else {
+          const map = {
+            carBrandUpdate: 'brand',
+            carPlateUpdate: 'plate',
+            carModelUpdate: 'model',
+            carCategoryUpdate: 'category'
+          };
+          body[map[fieldId]] = el.value.trim();
+        }
+      }
+    }
+  });
+  try {
+    const res = await fetch(`${API_BASE}/cars/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_TOKEN}`
+      },
+      body: JSON.stringify(body)
+    });
+    let data = null;
+    try { data = await res.json(); } catch { data = null; }
+    if (res.ok && data) {
+      displayResponse('carActionMessage', `<span style="color:green;font-size:1.2em">&#10003;</span> Voiture modifiée<br>${formatCarInfo(data)}`, false);
+      e.target.reset();
+
+      await populateCarIdSelect();
+    } else {
+      displayResponse('carActionMessage', JSON.stringify(data), true);
+    }
+  } catch (err) {
+    displayResponse('carActionMessage', `Erreur: ${err.message}`, true);
+  }
+};
+document.getElementById('btnResetRentalFilters').onclick = () => {
+  [
+    'filterRentalCarId','filterRentalStatus','filterRentalFrom',
+    'filterRentalTo','filterRentalPage','filterRentalLimit'
+  ].forEach(id => { document.getElementById(id).value = ''; });
+  clearTable('rentalsTable');
+  displayResponse('rentalResponse', '');
+  displayResponse('rentalActionMessage', '');
+};
+document.getElementById("btnListRentals").onclick = async () => {
+  await loadRentalsPage(1);
+};
+async function loadRentalsPage(page=1) {
+  const queryObj = {
+    carId: document.getElementById("filterRentalCarId").value,
+    status: document.getElementById("filterRentalStatus").value,
+    from: document.getElementById("filterRentalFrom").value,
+    to: document.getElementById("filterRentalTo").value,
+    page: page,
+    limit: document.getElementById("filterRentalLimit").value || 10
+  };
+  if (filterRentalPage.value) queryObj.page = filterRentalPage.value;
+  if (filterRentalLimit.value) queryObj.limit = filterRentalLimit.value;
+  Object.keys(queryObj).forEach(k => {
+    if (!queryObj[k]) delete queryObj[k];
+  });
+  try {
+    const res = await fetch(`${API_BASE}/rentals?${new URLSearchParams(queryObj)}`);
+    const data = await res.json();
+    if (Array.isArray(data.data)) {
+      const tbody = document.querySelector('#rentalsTable tbody');
+      tbody.innerHTML = '';
+      data.data.forEach(rental => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${rental.id}</td>
+          <td>${rental.carId}</td>
+          <td>${rental.from}</td>
+          <td>${rental.to}</td>
+          <td>${rental.days}</td>
+          <td>${(typeof rental.total === 'number' && !isNaN(rental.total)) ? rental.total.toFixed(2) : ""}</td>
+          <td>${rental.status}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('rentalsTable').style.display = 'table';
+      displayResponse('rentalResponse', `Page ${data.page} / ${data.totalPages} | Total: ${data.total}`);
+      renderPagination("paginationContainerRental",data.totalPages, data.page, loadRentalsPage);
+    } else {
+      clearTable('rentalsTable');
+      displayResponse('rentalResponse', "Aucune donnée reçue", true);
+      clearPagination("paginationContainerRental");
+    }
+  } catch (err) {
+    clearTable('rentalsTable');
+    displayResponse('rentalResponse', `Erreur: ${err.message}`, true);
+    clearPagination("paginationContainerRental");
+  }
+}
+const radios = document.getElementsByName('durationType');
+const daysContainer = document.getElementById('daysContainer');
+const dateToContainer = document.getElementById('dateToContainer');
+const rentalDaysInput = document.getElementById('rentalDays');
+const rentalToInput = document.getElementById('rentalTo');
+const rentalFromInput = document.getElementById('rentalFrom');
+const today = new Date().toISOString().slice(0, 10);
+rentalFromInput.min = today;
+document.getElementById('rentalForm').onsubmit = async (e) => {
+  e.preventDefault();
+  // ...
+  const from = document.getElementById('rentalFrom').value;
+  const today = new Date().toISOString().slice(0, 10);
+
+  if (from < today) {
+    alert("La date de début ne peut pas être dans le passé !");
+    return;
+  }
+}
+    rentalFromInput.addEventListener('change', function() {
+      rentalToInput.min = rentalFromInput.value;
+      if (rentalToInput.value && rentalToInput.value < rentalFromInput.value) {
+        rentalToInput.value = rentalFromInput.value;
+      }
+    });
+  radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (radio.checked) {
+        if (radio.value === 'days') {
+          daysContainer.style.display = 'block';
+          rentalDaysInput.required = true;
+          dateToContainer.style.display = 'none';
+          rentalToInput.required = false;
+        } else {
+          daysContainer.style.display = 'none';
+          rentalDaysInput.required = false;
+          dateToContainer.style.display = 'block';
+          rentalToInput.required = true;
+        }
+      }
+    });
+  });
+document.getElementById('rentalForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const carId = Number(document.getElementById('rentalCarId').value);
+  const from = document.getElementById('rentalFrom').value;
+  let to = rentalToInput.value;
+  let days = rentalDaysInput.value;
+  if (!carId || !from) {
+    alert('Merci de renseigner l\'ID voiture et la date de début');
+    return;
+  }
+  const durationType = [...radios].find(r => r.checked).value;
+  if (durationType === 'days') {
+    days = Number(days);
+    if (isNaN(days) || days < 1) {
+      alert('Veuillez entrer un nombre de jours valide (>= 1)');
+      return;
+    }
+    const dateFrom = new Date(from);
+    const dateToObj = new Date(dateFrom);
+    dateToObj.setDate(dateFrom.getDate() + days - 1);
+    to = dateToObj.toISOString().slice(0, 10);
+  } else {
+    if (!to) {
+      alert('Veuillez entrer la date de fin');
+      return;
+    }
+    if (to < from) {
+      alert('La date de fin doit être supérieure ou égale à la date de début');
+      return;
+    }
+    const dateFrom = new Date(from);
+    const dateTo = new Date(to);
+    const diffTime = dateTo.getTime() - dateFrom.getTime();
+    days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
+    if (isNaN(days) || days < 1) {
+      alert('La durée calculée doit être >= 1 jour');
+      return;
+    }
+  }
+  const body = { carId, from, to, days: Number(days) };
+  try {
+    const res = await fetch(`${API_BASE}/rentals`, { 
+      method: 'POST', 
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_TOKEN}` 
+      }, 
+      body: JSON.stringify(body) 
+    });
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch (e) {
+      alert(`Réponse serveur non JSON :\n${text}`);
+      return;
+    }
+    if (res.ok) {
+      alert(`Location créée avec ID: ${data.id}`);
+      displayResponse('rentalActionMessage', `<span style="color:green;font-size:1.2em;">&#10003;</span> Location créée<br>
+      <ul>
+        <li><strong>ID Location:</strong> ${data.id}</li>
+        <li><strong>ID Voiture:</strong> ${data.carId}</li>
+        <li><strong>Du:</strong> ${data.from}</li>
+        <li><strong>Au:</strong> ${data.to}</li>
+        <li><strong>Jours:</strong> ${data.days}</li>
+        <li><strong>Total:</strong> ${(typeof data.total === 'number' && !isNaN(data.total)) ? data.total.toFixed(2) + " €" : ""}</li>
+        <li><strong>Statut:</strong> ${data.status}</li>
+      </ul>`, false);
+      //------------------------------------------------------------------------------------------
+      const carRes = await fetch(`${API_BASE}/cars/${data.carId}`);
+      const carData = await carRes.json();
+      displayResponse('carActionMessage', formatCarInfo(carData), false);
+      // ------------------------------------------------------------------------------------------
+      e.target.reset();
+      //await loadRentalsPage(1);
+    } else {
+      alert(`Erreur API : ${JSON.stringify(data)}`);
+      displayResponse('rentalActionMessage', JSON.stringify(data), true);
+    }
+  } catch (err) {
+    alert(`Erreur réseau : ${err.message}`);
+    displayResponse('rentalActionMessage', `Erreur: ${err.message}`, true);
+  }
+};
+// --- Retourner une location ---
+document.getElementById("btnReturnRental").onclick = async () => {
+  const id = document.getElementById("rentalIdInput").value.trim();
+  if (!id) {
+    alert("Veuillez entrer un ID location");
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/rentals/${id}/return`, {
+      method: "PUT",
+      headers: { "Authorization": `Bearer ${API_TOKEN}` }
+    });
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { error: text }; }
+    if (res.ok) {
+      displayResponse('rentalActionMessage', `<span style="color:green;">&#10003;</span> Location retournée.<br>
+        <ul>
+          <li><strong>ID Location:</strong> ${data.id}</li>
+          <li><strong>ID Voiture:</strong> ${data.carId}</li>
+          <li><strong>Statut:</strong> ${data.status}</li>
+        </ul>`, false);
+      //------------------------------------------------------------------------------------------
+      const carRes = await fetch(`${API_BASE}/cars/${data.carId}`);
+      const carData = await carRes.json();
+      displayResponse('carActionMessage', formatCarInfo(carData), false);
+      
+      // ------------------------------------------------------------------------------------------
+    } else {
+      displayResponse('rentalActionMessage', data.error || "Erreur lors du retour", true);
+    }
+  } catch (err) {
+    displayResponse('rentalActionMessage', `Erreur: ${err.message}`, true);
+  }
+};
+
+// --- Annuler une location ---
+document.getElementById("btnCancelRental").onclick = async () => {
+  const id = document.getElementById("rentalIdInput").value.trim();
+  if (!id) {
+    alert("Veuillez entrer un ID location");
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/rentals/${id}`, {
+      method: "DELETE", 
+      headers: { "Authorization": `Bearer ${API_TOKEN}` }
+    });
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { error: text }; }
+    if (res.ok) {
+      displayResponse('rentalActionMessage', `<span style="color:green;">&#10003;</span> Location annulée.<br>
+        <ul>
+          <li><strong>ID Location:</strong> ${data.id}</li>
+          <li><strong>ID Voiture:</strong> ${data.carId}</li>
+          <li><strong>Statut:</strong> ${data.status}</li>
+        </ul>`, false);
+      //------------------------------------------------------------------------------------------
+      const carRes = await fetch(`${API_BASE}/cars/${data.carId}`);
+      const carData = await carRes.json();
+      displayResponse('carActionMessage', formatCarInfo(carData), false);
+     
+      // ------------------------------------------------------------------------------------------
+    } else {
+      displayResponse('rentalActionMessage', data.error || "Erreur lors de l'annulation", true);
+    }
+  } catch (err) {
+    displayResponse('rentalActionMessage', `Erreur: ${err.message}`, true);
+  }
+};
+
+</script>
+</body>
+</html>

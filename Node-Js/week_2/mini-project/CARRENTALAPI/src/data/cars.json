@@ -1,0 +1,211 @@
+[
+  {
+    "id": 2,
+    "brand": "Ford",
+    "plate": "DEF-5678",
+    "model": "Mustang",
+    "category": "eco",
+    "pricePerDay": 90,
+    "available": false,
+    "createdAt": "2025-01-02",
+    "updatedAt": "2025-11-09T16:52:50.224Z"
+  },
+  {
+    "id": 3,
+    "brand": "Honda",
+    "plate": "GHI-9012",
+    "model": "Civic",
+    "category": "sedan",
+    "pricePerDay": 50,
+    "available": false,
+    "createdAt": "2025-01-03",
+    "updatedAt": "2025-11-09T18:45:46.695Z"
+  },
+  {
+    "id": 6,
+    "brand": "Chevrolet",
+    "plate": "PQR-2345",
+    "model": "Camaro",
+    "category": "eco",
+    "pricePerDay": 85,
+    "available": true,
+    "createdAt": "2025-01-06",
+    "updatedAt": "2025-01-06"
+  },
+  {
+    "id": 8,
+    "brand": "Tesla",
+    "plate": "VWX-0123",
+    "model": "Model 3",
+    "category": "van",
+    "pricePerDay": 110,
+    "available": true,
+    "createdAt": "2025-01-08",
+    "updatedAt": "2025-11-09T17:05:42.266Z"
+  },
+  {
+    "id": 9,
+    "brand": "Volkswagen",
+    "plate": "YZA-4567",
+    "model": "Golf",
+    "category": "eco",
+    "pricePerDay": 55,
+    "available": true,
+    "createdAt": "2025-01-09",
+    "updatedAt": "2025-11-09T18:47:07.149Z"
+  },
+  {
+    "id": 10,
+    "brand": "Subaru",
+    "plate": "BCD-8910",
+    "model": "Outback",
+    "category": "suv",
+    "pricePerDay": 70,
+    "available": true,
+    "createdAt": "2025-01-10",
+    "updatedAt": "2025-11-09T18:29:09.569Z"
+  },
+  {
+    "id": 11,
+    "brand": "Hyundai",
+    "plate": "EFG-1112",
+    "model": "Elantra",
+    "category": "sedan",
+    "pricePerDay": 35,
+    "available": true,
+    "createdAt": "2025-01-11",
+    "updatedAt": "2025-11-09T18:30:29.732Z"
+  },
+  {
+    "id": 12,
+    "brand": "Kia",
+    "plate": "HIJ-1314",
+    "model": "Sorento",
+    "category": "suv",
+    "pricePerDay": 65,
+    "available": true,
+    "createdAt": "2025-01-12",
+    "updatedAt": "2025-11-09T18:30:56.964Z"
+  },
+  {
+    "id": 13,
+    "brand": "Mazda",
+    "plate": "KLM-1516",
+    "model": "CX-5",
+    "category": "suv",
+    "pricePerDay": 70,
+    "available": true,
+    "createdAt": "2025-01-13",
+    "updatedAt": "2025-01-13"
+  },
+  {
+    "id": 14,
+    "brand": "Jeep",
+    "plate": "NOP-1718",
+    "model": "Wrangler",
+    "category": "suv",
+    "pricePerDay": 95,
+    "available": true,
+    "createdAt": "2025-01-14",
+    "updatedAt": "2025-01-14"
+  },
+  {
+    "id": 15,
+    "brand": "Mercedes",
+    "plate": "QRS-1920",
+    "model": "C-Class",
+    "category": "sedan",
+    "pricePerDay": 55,
+    "available": true,
+    "createdAt": "2025-01-15",
+    "updatedAt": "2025-11-09T16:55:52.172Z"
+  },
+  {
+    "id": 16,
+    "brand": "Lexus",
+    "plate": "TUV-2122",
+    "model": "RX",
+    "category": "suv",
+    "pricePerDay": 12,
+    "available": true,
+    "createdAt": "2025-01-16",
+    "updatedAt": "2025-11-09T18:23:16.521Z"
+  },
+  {
+    "id": 17,
+    "brand": "Volvo",
+    "plate": "WXY-2324",
+    "model": "XC90",
+    "category": "suv",
+    "pricePerDay": 115,
+    "available": true,
+    "createdAt": "2025-01-17",
+    "updatedAt": "2025-01-17"
+  },
+  {
+    "id": 18,
+    "brand": "Jaguar",
+    "plate": "ZAB-2526",
+    "model": "XF",
+    "category": "sedan",
+    "pricePerDay": 140,
+    "available": true,
+    "createdAt": "2025-01-18",
+    "updatedAt": "2025-01-18"
+  },
+  {
+    "id": 19,
+    "brand": "Cadillac",
+    "plate": "CDE-2728",
+    "model": "Escalade",
+    "category": "suv",
+    "pricePerDay": 150,
+    "available": true,
+    "createdAt": "2025-01-19",
+    "updatedAt": "2025-11-09T17:01:40.484Z"
+  },
+  {
+    "id": 20,
+    "brand": "Mini",
+    "plate": "FGH-2930",
+    "model": "Cooper",
+    "category": "eco",
+    "pricePerDay": 60,
+    "available": true,
+    "createdAt": "2025-01-20",
+    "updatedAt": "2025-11-09T14:12:26.529Z"
+  },
+  {
+    "id": 21,
+    "brand": "hyundai",
+    "model": "fhj,,lm",
+    "category": "van",
+    "plate": "457_78",
+    "pricePerDay": 140,
+    "available": true,
+    "createdAt": "2025-11-09T12:56:30.205Z",
+    "updatedAt": "2025-11-09T16:16:37.942Z"
+  },
+  {
+    "id": 22,
+    "brand": "Tesla",
+    "model": "model 1",
+    "category": "eco",
+    "plate": "jk_nnjk",
+    "pricePerDay": 152,
+    "available": true,
+    "createdAt": "2025-11-09T14:35:41.925Z",
+    "updatedAt": "2025-11-09T14:36:33.502Z"
+  },
+  {
+    "id": 23,
+    "brand": "mp,,",
+    "model": "boij",
+    "category": "suv",
+    "plate": "bbuio",
+    "pricePerDay": 14,
+    "available": true,
+    "createdAt": "2025-11-09T17:02:03.821Z",
+    "updatedAt": "2025-11-09T17:02:03.821Z"
+  }
+]
