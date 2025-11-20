@@ -26,6 +26,8 @@ export async function getListCars(req,res) {
         minPrice: req.query.minPrice,
         maxPrice: req.query.maxPrice,
         q: req.query.q,
+        from:req.query.from,
+        to:req.query.to,
         page: req.query.page,
         limit: req.query.limit
     };

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo Tracker - Simple</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Liste des Tâches</h1>
+    </header>
+    <main>
+      <section id="auth-section" class="card">
+        <h2>Connexion</h2>
+        <div class="row">
+          <input id="email" type="email" placeholder="Email" />
+          <input id="password" type="password" placeholder="Mot de passe" />
+          <button id="loginBtn">Se connecter</button>
+        </div>
+        <div id="auth-error" class="error hidden"></div>
+        <p class="muted">
+          Après connexion, un token est stocké dans le navigateur.
+        </p>
+      </section>
+
+      <section id="app-section" class="card hidden">
+        <div
+          class="row"
+          style="justify-content: space-between; align-items: center"
+        >
+          <h2 style="margin: 0">Mes Todos</h2>
+          <button id="logoutBtn" class="secondary">Se déconnecter</button>
+        </div>
+
+        <div class="row" style="margin-top: 10px">
+          <input
+            id="newTodoTitle"
+            type="text"
+            placeholder="Ajouter une todo..."
+          />
+          <button id="addTodoBtn">Ajouter</button>
+        </div>
+
+        <div class="row" style="margin-top: 10px; gap: 8px; flex-wrap: wrap">
+          <select id="filter-status">
+            <option value="">Tous les statuts</option>
+            <option value="active">Actives</option>
+            <option value="completed">Terminées</option>
+          </select>
+
+          <select id="filter-priority">
+            <option value="">Toutes les priorités</option>
+            <option value="low">Basse</option>
+            <option value="medium">Moyenne</option>
+            <option value="high">Haute</option>
+          </select>
+
+          <input
+            id="filter-search"
+            type="text"
+            placeholder="Rechercher par titre..."
+            style="flex: 1 1 200px"
+          />
+          <button id="filterBtn">Filtrer</button>
+        </div>
+
+        <ul id="todosList" style="margin-top: 10px"></ul>
+        <div id="todos-empty" class="muted hidden">
+          Aucune Tâches pour l'instant.
+        </div>
+
+        <div id="todo-details" class="card hidden" style="margin-top: 16px">
+          <h3>Détails de la tâche sélectionnée</h3>
+          <p>
+            <strong>Titre :</strong>
+            <span id="detail-title"></span>
+          </p>
+          <p>
+            <strong>Priorité :</strong>
+            <select id="detail-priority">
+              <option value="low">Basse</option>
+              <option value="medium">Moyenne</option>
+              <option value="high">Haute</option>
+            </select>
+          </p>
+          <p>
+            <strong>Échéance :</strong>
+            <input type="date" id="detail-dueDate" />
+          </p>
+          <div class="row" style="margin-top: 8px">
+            <button id="saveTodoBtn">Enregistrer les modifications</button>
+            <button id="cancelEditBtn" class="secondary">Annuler</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

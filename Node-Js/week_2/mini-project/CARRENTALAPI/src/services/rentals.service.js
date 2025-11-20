@@ -2,6 +2,7 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import { readFile,writeFile } from 'node:fs/promises'
 import {getCar,updateCar} from './cars.service.js'
+import {isAvialable} from '../utils/avialability.js'
 
 const __filename=fileURLToPath(import.meta.url);
 const __dirname=path.dirname(__filename);
@@ -33,10 +34,10 @@ export async function getRentals(filters={}) {
     }
     
     if (filters.from && /^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/.test(filters.from))
-        filterRental = filterRental.filter((r) => r.from === filters.from);
+        filterRental = filterRental.filter((r) => r.from >= filters.from);
 
     if (filters.to && /^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/.test(filters.to))
-        filterRental = filterRental.filter((r) => r.to === filters.to);
+        filterRental = filterRental.filter((r) => r.to <= filters.to);
 
     if(filters.from && filters.to && filters.to < filters.from){
         throw new Error("la date de retoure doit être suppérieur à la date de départ");
@@ -85,10 +86,8 @@ export async function createRental(rental) {
     if(!car){
         throw new Error ("car not found");
     }
-    /*if(car.available === false){
-        throw new Error ("car not available");
-    }*/
     let rentals = await readRentals();
+    
     //calcule date To || days
     let days;
    if(rental.from){
@@ -110,6 +109,10 @@ export async function createRental(rental) {
     }
 
    }
+   //verification de aviability d'une voiture
+    if(!isAvialable(car.id,rental.from,rental.to,rentals)){
+        throw new Error("cette voiture est déjà louée sur cette période !")
+    }
    const maxId = rentals.length ? Math.max(...rentals.map(r => r.id)) : 0;
    rental.id = maxId + 1;
    rental.dailyRate=car.pricePerDay;
@@ -158,7 +161,7 @@ export async function returnRental(id) {
     rentals[index].status="returned";
     rentals[index].updatedAt=new Date().toISOString();
 
-    await updateCar(rentals[index].carId,{available: true});
+    //await updateCar(rentals[index].carId,{available: true});
     await writeRentals(rentals);
 
     return rentals[index];
@@ -176,7 +179,7 @@ export async function cancelRental(id) {
     rentals[index].status="cancelled";
     rentals[index].updatedAt=new Date().toISOString();
 
-    await updateCar(rentals[index].carId,{available: true});
+    //await updateCar(rentals[index].carId,{available: true});
     await writeRentals(rentals);
 
     return rentals[index];

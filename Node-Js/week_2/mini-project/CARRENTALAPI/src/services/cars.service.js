@@ -2,12 +2,15 @@ import { readFile,writeFile } from 'node:fs/promises'
 import path from 'path';
 import {fileURLToPath} from 'url';
 import {readRentals,writeRentals} from './rentals.service.js';
+import {isAvialable} from '../utils/avialability.js'
 const __filename=fileURLToPath(import.meta.url);
 const __dirname=path.dirname(__filename);
 
 const chemin=path.resolve(__dirname,'../data/cars.json');
-//pour supp d'une car
+
 const chemin_rental=path.resolve(__dirname,'../data/rentals.json');
+
+// Fonction de vérification de disponibilité
 
 //variable globale
 async function readCars() {
@@ -28,13 +31,13 @@ export async function getCars(filters={}) {
         const filterCategory=filters.category.toLocaleLowerCase()
         filteredCars=filteredCars.filter(c=>c.category.toLocaleLowerCase() === filterCategory)
     }
-     const available=filters.available === "true" ? true :
+     /*const available=filters.available === "true" ? true :
                     filters.available==='false'?false:
                     undefined
 
     if(available!==undefined){
         filteredCars=filteredCars.filter(c=>c.available === available)
-    }
+    }*/
 
     const minPrice=parseFloat(filters.minPrice)
     const maxPrice=parseFloat(filters.maxPrice)
@@ -59,6 +62,29 @@ export async function getCars(filters={}) {
             ||(c.model && c.model.toLowerCase().includes(qLower)))
         )
     }
+    
+    // les disponibilité dynamique selon période recherchée (from/to)
+    if(filters.from && filters.to && filters.to < filters.from){
+        throw new Error("La date de fin doit être supp de date de début!");
+    }
+    const searchFrom = filters.from || new Date().toISOString().slice(0, 10);
+    const searchTo = filters.to || searchFrom;
+    const rentals = await readRentals();
+    filteredCars = await Promise.all(
+        filteredCars.map(async car => ({
+        ...car,
+        available: await isAvialable(car.id, searchFrom, searchTo, rentals)
+        }))
+    );
+    
+    // Si filtre disponible demandé (ou si on veut que par défaut, seules les dispos soient listées)
+    if (filters.available === "true") {
+        filteredCars = filteredCars.filter(car => car.available);
+    }
+     if (filters.available === "false") {
+        filteredCars = filteredCars.filter(car => !car.available);
+    }
+
 
     /**Pagination */
     const page=Number(filters.page) || 1
@@ -87,7 +113,6 @@ export async function getCar(id) {
     const cars=await readCars();
     return cars.find(r=>r.id===Number(id))
 }
-
 
 /**
  * 
@@ -151,9 +176,6 @@ export async function removeCar(id) {
     if(index=== -1){
         return false;
     }
-    /*if(!cars[index].available){
-        throw new Error("Impossible de supprimer une voiture louée !");
-    }*/
     let rentals=await readRentals();
     const HasActiveRental=rentals.some(r=>r.carId === Number(id) && r.status === "active");
     if(HasActiveRental){

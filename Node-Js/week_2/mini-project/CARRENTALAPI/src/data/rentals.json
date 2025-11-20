@@ -1,22 +1,223 @@
 [
-  {"id":1,"carId":2,"from":"2025-11-09","to":"2025-11-11","days":2,"dailyRate":34,"total":68,"status":"active","createdAt":"2025-11-03T08:00:00Z","updatedAt":"2025-11-03T08:00:00Z"},
-  {"id":2,"carId":7,"from":"2025-11-05","to":"2025-11-13","days":8,"dailyRate":31,"total":248,"status":"returned","createdAt":"2025-11-04T09:00:00Z","updatedAt":"2025-11-14T10:00:00Z"},
-  {"id":3,"carId":11,"from":"2025-11-10","to":"2025-11-15","days":5,"dailyRate":34,"total":170,"status":"cancelled","createdAt":"2025-11-07T09:00:00Z","updatedAt":"2025-11-07T09:30:00Z"},
-  {"id":4,"carId":2,"from":"2025-11-15","to":"2025-11-20","days":5,"dailyRate":34,"total":170,"status":"active","createdAt":"2025-11-09T10:00:00Z","updatedAt":"2025-11-09T10:01:00Z"},
-  {"id":5,"carId":13,"from":"2025-11-10","to":"2025-11-12","days":2,"dailyRate":29,"total":58,"status":"active","createdAt":"2025-11-10T11:00:00Z","updatedAt":"2025-11-10T11:00:00Z"},
-  {"id":6,"carId":19,"from":"2025-11-12","to":"2025-11-17","days":5,"dailyRate":26,"total":130,"status":"active","createdAt":"2025-11-12T14:00:00Z","updatedAt":"2025-11-14T14:01:00Z"},
-  {"id":7,"carId":7,"from":"2025-11-20","to":"2025-11-25","days":5,"dailyRate":31,"total":155,"status":"active","createdAt":"2025-11-15T12:00:00Z","updatedAt":"2025-11-15T12:00:00Z"},
-  {"id":8,"carId":7,"from":"2025-11-26","to":"2025-11-29","days":3,"dailyRate":31,"total":93,"status":"cancelled","createdAt":"2025-11-16T13:00:00Z","updatedAt":"2025-11-17T14:00:00Z"},
-  {"id":9,"carId":13,"from":"2025-11-13","to":"2025-11-18","days":5,"dailyRate":29,"total":145,"status":"returned","createdAt":"2025-11-13T16:00:00Z","updatedAt":"2025-11-18T18:00:00Z"},
-  {"id":10,"carId":2,"from":"2025-11-21","to":"2025-11-24","days":3,"dailyRate":34,"total":102,"status":"active","createdAt":"2025-11-15T18:00:00Z","updatedAt":"2025-11-15T18:05:00Z"},
-  {"id":11,"carId":19,"from":"2025-11-19","to":"2025-11-22","days":3,"dailyRate":26,"total":78,"status":"cancelled","createdAt":"2025-11-16T11:00:00Z","updatedAt":"2025-11-18T11:00:00Z"},
-  {"id":12,"carId":2,"from":"2025-11-27","to":"2025-11-29","days":2,"dailyRate":34,"total":68,"status":"returned","createdAt":"2025-11-20T08:00:00Z","updatedAt":"2025-11-30T08:00:00Z"},
-  {"id":13,"carId":7,"from":"2025-11-30","to":"2025-12-03","days":3,"dailyRate":31,"total":93,"status":"active","createdAt":"2025-11-25T09:00:00Z","updatedAt":"2025-11-25T09:00:00Z"},
-  {"id":14,"carId":11,"from":"2025-11-22","to":"2025-11-26","days":4,"dailyRate":34,"total":136,"status":"active","createdAt":"2025-11-19T13:00:00Z","updatedAt":"2025-11-23T09:00:00Z"},
-  {"id":15,"carId":13,"from":"2025-11-21","to":"2025-11-25","days":4,"dailyRate":29,"total":116,"status":"active","createdAt":"2025-11-20T19:00:00Z","updatedAt":"2025-11-20T19:05:00Z"},
-  {"id":16,"carId":2,"from":"2025-12-01","to":"2025-12-04","days":3,"dailyRate":34,"total":102,"status":"active","createdAt":"2025-11-25T22:00:00Z","updatedAt":"2025-11-25T23:00:00Z"},
-  {"id":17,"carId":13,"from":"2025-12-05","to":"2025-12-07","days":2,"dailyRate":29,"total":58,"status":"cancelled","createdAt":"2025-11-26T09:00:00Z","updatedAt":"2025-11-27T09:00:00Z"},
-  {"id":18,"carId":19,"from":"2025-12-07","to":"2025-12-09","days":2,"dailyRate":26,"total":52,"status":"returned","createdAt":"2025-11-28T11:00:00Z","updatedAt":"2025-12-09T12:00:00Z"},
-  {"id":19,"carId":19,"from":"2025-12-10","to":"2025-12-15","days":5,"dailyRate":26,"total":130,"status":"active","createdAt":"2025-11-29T10:00:00Z","updatedAt":"2025-11-29T10:00:00Z"},
-  {"id":20,"carId":2,"from":"2025-12-06","to":"2025-12-08","days":2,"dailyRate":34,"total":68,"status":"active","createdAt":"2025-12-01T13:00:00Z","updatedAt":"2025-12-01T13:00:00Z"}
+  {
+    "id": 1,
+    "carId": 1,
+    "from": "2025-11-12",
+    "to": "2025-11-15",
+    "days": 4,
+    "total": 180,
+    "status": "returned",
+    "updatedAt": "2025-11-11T21:21:49.897Z"
+  },
+  {
+    "id": 2,
+    "carId": 2,
+    "from": "2025-11-10",
+    "to": "2025-11-17",
+    "days": 8,
+    "total": 392,
+    "status": "cancelled",
+    "updatedAt": "2025-11-11T10:02:43.775Z"
+  },
+  {
+    "id": 3,
+    "carId": 3,
+    "from": "2025-11-14",
+    "to": "2025-11-20",
+    "days": 7,
+    "total": 329,
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "carId": 4,
+    "from": "2025-11-18",
+    "to": "2025-11-20",
+    "days": 3,
+    "total": 138,
+    "status": "active"
+  },
+  {
+    "id": 5,
+    "carId": 5,
+    "from": "2025-11-10",
+    "to": "2025-11-12",
+    "days": 3,
+    "total": 156,
+    "status": "active"
+  },
+  {
+    "id": 6,
+    "carId": 6,
+    "from": "2025-11-09",
+    "to": "2025-11-13",
+    "days": 5,
+    "total": 320,
+    "status": "active"
+  },
+  {
+    "id": 7,
+    "carId": 7,
+    "from": "2025-11-22",
+    "to": "2025-11-28",
+    "days": 7,
+    "total": 434,
+    "status": "active"
+  },
+  {
+    "id": 8,
+    "carId": 8,
+    "from": "2025-11-13",
+    "to": "2025-11-20",
+    "days": 8,
+    "total": 440,
+    "status": "active"
+  },
+  {
+    "id": 9,
+    "carId": 9,
+    "from": "2025-11-14",
+    "to": "2025-11-19",
+    "days": 6,
+    "total": 480,
+    "status": "active"
+  },
+  {
+    "id": 10,
+    "carId": 10,
+    "from": "2025-11-17",
+    "to": "2025-11-24",
+    "days": 8,
+    "total": 352,
+    "status": "cancelled",
+    "updatedAt": "2025-11-15T20:20:41.393Z"
+  },
+  {
+    "id": 11,
+    "carId": 11,
+    "from": "2025-11-12",
+    "to": "2025-11-13",
+    "days": 2,
+    "total": 82,
+    "status": "active"
+  },
+  {
+    "id": 12,
+    "carId": 12,
+    "from": "2025-11-19",
+    "to": "2025-11-22",
+    "days": 4,
+    "total": 192,
+    "status": "active"
+  },
+  {
+    "id": 13,
+    "carId": 13,
+    "from": "2025-11-10",
+    "to": "2025-11-15",
+    "days": 6,
+    "total": 270,
+    "status": "active"
+  },
+  {
+    "id": 14,
+    "carId": 14,
+    "from": "2025-11-13",
+    "to": "2025-11-20",
+    "days": 8,
+    "total": 352,
+    "status": "active"
+  },
+  {
+    "id": 15,
+    "carId": 15,
+    "from": "2025-11-16",
+    "to": "2025-11-22",
+    "days": 7,
+    "total": 525,
+    "status": "active"
+  },
+  {
+    "id": 16,
+    "carId": 16,
+    "from": "2025-11-10",
+    "to": "2025-11-13",
+    "days": 4,
+    "total": 304,
+    "status": "active"
+  },
+  {
+    "id": 17,
+    "carId": 17,
+    "from": "2025-11-15",
+    "to": "2025-11-17",
+    "days": 3,
+    "total": 237,
+    "status": "active"
+  },
+  {
+    "id": 18,
+    "carId": 18,
+    "from": "2025-11-20",
+    "to": "2025-11-28",
+    "days": 9,
+    "total": 540,
+    "status": "active"
+  },
+  {
+    "id": 19,
+    "carId": 19,
+    "from": "2025-11-11",
+    "to": "2025-11-19",
+    "days": 9,
+    "total": 810,
+    "status": "cancelled",
+    "updatedAt": "2025-11-11T00:11:11.056Z"
+  },
+  {
+    "id": 20,
+    "carId": 20,
+    "from": "2025-11-14",
+    "to": "2025-11-17",
+    "days": 4,
+    "total": 240,
+    "status": "returned",
+    "updatedAt": "2025-11-11T00:11:04.253Z"
+  },
+  {
+    "carId": 12,
+    "from": "2025-11-13",
+    "to": "2025-11-14",
+    "days": 2,
+    "id": 21,
+    "dailyRate": 48,
+    "total": 96,
+    "status": "active",
+    "createdAt": "2025-11-11T10:01:28.869Z",
+    "updatedAt": "2025-11-11T10:01:28.869Z"
+  },
+  {
+    "carId": 1,
+    "from": "2025-11-16",
+    "to": "2025-11-20",
+    "days": 5,
+    "id": 22,
+    "dailyRate": 45,
+    "total": 225,
+    "status": "active",
+    "createdAt": "2025-11-11T10:03:30.065Z",
+    "updatedAt": "2025-11-11T10:03:30.066Z"
+  },
+  {
+    "carId": 4,
+    "from": "2025-11-12",
+    "to": "2025-11-15",
+    "days": 4,
+    "id": 23,
+    "dailyRate": 46,
+    "total": 184,
+    "status": "cancelled",
+    "createdAt": "2025-11-11T14:10:39.590Z",
+    "updatedAt": "2025-11-11T14:11:29.864Z"
+  }
 ]
