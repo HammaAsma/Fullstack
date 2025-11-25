@@ -1,0 +1,144 @@
+/* RESET BASIQUE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* ---------------------- */
+/* NAVBARS (Main + Admin) */
+/* ---------------------- */
+
+header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+header nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+header nav a:hover {
+  background-color: #f3f3f3;
+}
+
+/* Active link en mode public */
+header nav a.active {
+  color: #007bff;
+  background-color: #e8f0ff;
+}
+
+/* --------------- */
+/* ADMIN TOP BAR   */
+/* --------------- */
+
+.admin-topbar {
+  background: #222 !important;
+  color: white;
+  padding: 15px 20px;
+  border-bottom: 1px solid #333;
+}
+
+.admin-topbar h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ---------------- */
+/* ADMIN SIDEBAR    */
+/* ---------------- */
+
+.admin-layout {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+.admin-sidebar {
+  width: 220px;
+  background-color: #fafafa;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+}
+
+.admin-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-sidebar a {
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: #333;
+  transition: 0.2s;
+  font-weight: 500;
+}
+
+/* Hover */
+.admin-sidebar a:hover {
+  background-color: #eaeaea;
+}
+
+/* Lien actif */
+.admin-sidebar a.active {
+  background-color: #007bff;
+  color: white;
+}
+
+/* ---------------- */
+/* CONTENU CENTRAL  */
+/* ---------------- */
+
+.admin-content {
+  flex: 1;
+  padding: 25px;
+}
+
+main {
+  animation: fadeIn 0.2s;
+}
+
+/* Petit effet visuel */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ---------------- */
+/* LOGOUT BUTTON    */
+/* ---------------- */
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #333;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-decoration: none;
+}
+
+.logout-btn:hover {
+  background: #444;
+}
+
+.logout-icon {
+  width: 18px;
+  height: 18px;
+  fill: white;
+}
