@@ -1,0 +1,106 @@
+/* ---------------------------
+   Global Variables + Theme
+---------------------------- */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mode clair (auto si navigateur en light mode) */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
+
+/* ---------------------------
+   LINKS (compatible Bootstrap)
+---------------------------- */
+a {
+  font-weight: 500;
+  color: #64beff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #79c2de96;
+}
+
+/* ---------------------------
+   BODY (fixe le bug flex!)
+---------------------------- */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  /* On enlève le display:flex qui détruit les layouts Bootstrap */
+  background-color: inherit;
+  color: inherit;
+}
+
+/* ---------------------------
+   HEADINGS
+---------------------------- */
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+/* ---------------------------
+   BUTTONS (sans casser Bootstrap)
+---------------------------- */
+button:not(.btn) {
+  /* seulement si pas classe Bootstrap */
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:not(.btn):hover {
+  border-color: #31a8cf;
+}
+
+button:not(.btn):focus,
+button:not(.btn):focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Mode clair pour les boutons non-Bootstrap */
+@media (prefers-color-scheme: light) {
+  button:not(.btn) {
+    background-color: #f9f9f9;
+  }
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenu qui prend toute la hauteur disponible */
+.main-content {
+  flex: 1;
+}
