@@ -10,7 +10,7 @@ export default function AddProductForm({ onCreate }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!formData.title.trim()) return alert("Nom obligatoire");
+    if (!formData.name.trim()) return alert("Nom obligatoire");
     if (!formData.price) return alert("prix obligatoire");
     onCreate({ name: formData.name, ...formData });
     setFormData({
